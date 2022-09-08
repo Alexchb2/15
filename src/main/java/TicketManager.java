@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class TicketManager {
 
     private TicketRepository tickets;
@@ -10,27 +12,28 @@ public class TicketManager {
         tickets.add(ticket);
     }
 
-    public Ticket[] searchBy(String text) {
+    public Ticket[] searchBy(String from, String to) {
         Ticket[] result = new Ticket[0];
         for (Ticket ticket : tickets.findAll()) {
-            if (matches(ticket, text)) {
+            if (matches(ticket, from, to)) {
                 Ticket[] tmp = new Ticket[result.length + 1];
                 System.arraycopy(result, 0, tmp, 0, result.length);
                 tmp[tmp.length - 1] = ticket;
                 result = tmp;
             }
         }
+        Arrays.sort(result);
         return result;
     }
 
-    public boolean matches(Ticket ticket, String search) {
+    public boolean matches(Ticket ticket, String from, String to) {
 
-        if (ticket.getFrom().contains(search)) {
-            return true;
+        if (!ticket.getFrom().equals(from)) {
+            return false;
         }
-        if (ticket.getTo().contains(search)) {
-            return true;
+        if (!ticket.getTo().equals(to)) {
+            return false;
         }
-        return false;
+        return true;
     }
 }
